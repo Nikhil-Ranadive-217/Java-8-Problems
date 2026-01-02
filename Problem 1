@@ -1,0 +1,41 @@
+Problem:-Given a list of integers, print each element using Streams.
+
+Java 8 Streams provide a functional way to process collections, and printing elements uses the terminal forEach operation on a stream from the list. This approach replaces traditional loops with declarative code.
+
+Step-by-Step Logic
+Convert the list to a stream using list.stream(). Apply forEach with a Consumer that prints each integer via System.out.println. The stream consumes after the terminal operation, ensuring one-time execution.
+​
+
+Complete Implementation:-
+
+import java.util.Arrays;
+import java.util.List;
+
+public class PrintIntegersStream {
+    public static void printUsingStream(List<Integer> numbers) {
+        numbers.stream()
+               .forEach(System.out::println);
+    }
+
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+        printUsingStream(numbers);
+    }
+}
+
+
+This prints each number on a new line. Method reference System.out::println simplifies the lambda.
+​
+
+Thought Process
+Start from the source collection and chain to stream(). Choose forEach as the simplest terminal operation for side-effect printing. Avoid intermediate ops like map since no transformation needed. Streams are lazy, so forEach triggers processing.
+​
+Edge Cases Analysis
+Empty list: Stream empty, nothing prints; no exception.​
+Null list: NullPointerException on stream() call; handle with null check.
+Single element: Prints once without issues.
+Null elements: println handles null gracefully, printing "null".
+Large lists: Sequential stream fine up to millions; use parallelStream() for huge data if order irrelevant, but printing order non-deterministic.​
+Consumed stream: Reuse throws IllegalStateException; create fresh each time.
+
+                                              
