@@ -1,0 +1,44 @@
+Problem Statement
+From a list, print all numbers greater than 10.
+
+
+#Solution:-
+Java 8 Streams filter collections using a Predicate, chaining filter with > 10 before terminal forEach to print matching integers. This declarative style processes lazily, only evaluating needed elements.
+
+#Step-by-Step Logic:-
+Create stream from list via stream(). Chain filter(num -> num > 10) to retain elements > 10.
+Terminate with forEach(System.out::println) to print survivors on separate lines.
+​
+
+#Complete Implementation:-
+
+import java.util.Arrays;
+import java.util.List;
+
+public class PrintGreaterThanTen {
+    public static void printGreaterThanTen(List<Integer> numbers) {
+        numbers.stream()
+               .filter(num -> num > 10)
+               .forEach(System.out::println);
+    }
+
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(5, 12, 8, 15, 3, 20);
+        printGreaterThanTen(numbers);
+    }
+}
+
+#Output:-
+Prints only 12, 15, 20. Lambda predicate is concise; method reference handles printing.
+​
+#Thought Process:-
+Build from source stream, add intermediate filter for condition (predicate returns boolean). Select forEach terminal for side-effect printing, avoiding collection if unneeded. Lazy evaluation skips non-matches early.
+​
+#Edge Cases Analysis:-
+Empty list: No output, no exception.​
+Null list: NullPointerException on stream(); precondition null-check.
+All ≤10: Nothing prints.
+Null elements: filter skips (null > 10 false); println safe if reached.
+Exactly 10: Filtered out (>10 strict).
+Negatives/large: Negatives fail; INT_MAX fine, no overflow in comparison.
+Large lists: O(n) sequential scan; parallel for >10^6 if order irrelevant, but printing unordered.
