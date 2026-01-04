@@ -1,0 +1,48 @@
+Problem:-Print the square of every integer in the list.
+
+Java 8 Streams transform elements via map, applying a function like squaring to each integer before printing. This replaces imperative loops with functional mapping.
+
+1.Step-by-Step Logic
+Stream the list with stream(). Chain map(num -> num * num) to square each. Terminate via forEach(System.out::println) to print squares on new lines.
+​
+
+2.Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+
+public class PrintSquares {
+    public static void printSquares(List<Integer> numbers) {
+        numbers.stream()
+               .map(num -> num * num)
+               .forEach(System.out::println);
+    }
+
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+        printSquares(numbers);
+    }
+}
+
+Prints 1, 4, 9, 16, 25. Lambda computes square; output stream of transformed values.
+​
+
+3.Thought Process
+Source to stream, intermediate map for 1:1 transformation (returns same-sized stream). Use forEach for printing side-effect; no collection needed. Lazy: squares compute only on terminal trigger.
+​
+
+4.Edge Cases Analysis
+Empty list: No output.​
+Null list: NullPointerException; null-check required.
+Null elements: map passes null * null = NPE; filter nulls or use Objects.requireNonNull.
+Zero: 0 → 0 fine.
+Negatives: (-3)^2 → 9 correct (int arithmetic).
+Overflow: 46341^2 → 2^31-1 ok; 46340^2 → -ve due to int overflow (2^31 overflow wraps). Use long for safety: map(num -> (long) num * num. Large lists: Sequential O(n); parallelStream for speed, unordered print.
+
+
+
+
+
+
+
+
