@@ -1,0 +1,42 @@
+Question:
+Count the number of unique integers in a list.
+
+Java 8 Streams count unique integers by chaining distinct() to remove duplicates before terminal count(). This leverages hashCode() and equals() for Integer equality.
+
+#Step-by-Step Logic
+Stream the list via stream(). Apply distinct() intermediate op to retain first occurrence of each unique value. Call count() terminal op for long result.
+​
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+
+public class CountUniqueIntegers {
+    public static long countUnique(List<Integer> numbers) {
+        return numbers.stream()
+                      .distinct()
+                      .count();
+    }
+
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 2, 3, 4, 4, 5);
+        System.out.println(countUnique(numbers)); // 5
+    }
+}
+
+Returns 5 for example. Efficient O(n) with HashSet internally.
+​
+
+#Thought Process
+distinct() stateful intermediate filters uniques using Object.equals/hashCode. Pair with count() for quantity without collecting. Avoids explicit Set; stream handles laziness.
+​
+
+#Edge Cases Analysis
+Empty list: Returns 0L.​
+Null list: NullPointerException; null-check.
+All duplicates: Returns 1L.
+Null elements: distinct() retains one null (null.hashCode=0, equals null true); count includes it.
+Single element: Returns 1L.
+Large lists: HashSet scales; parallelStream() unordered but correct count.
+Integer caching: -128 to 127 cached, but equals consistent.
