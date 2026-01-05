@@ -1,0 +1,42 @@
+#Question:
+Sort and print the numbers in a list in descending order.
+Input:
+List<Integer> list = Arrays.asList(3, 8, 1);
+
+#Solution:-
+Java 8 Streams sort in descending order using sorted(Comparator.reverseOrder()) for natural types like Integer. This prints the input [3, 8, 1] as 8, 3, 1.
+
+#Step-by-Step Logic
+Stream the list with stream(). Apply sorted(Comparator.reverseOrder()) for descending natural order. Terminate with forEach(System.out::println) to print each on new line.​
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
+public class SortDescendingPrint {
+    public static void sortAndPrintDescending(List<Integer> numbers) {
+        numbers.stream()
+               .sorted(Comparator.reverseOrder())
+               .forEach(System.out::println);
+    }
+
+    public static void main(String[] args) {
+        List<Integer> list = Arrays.asList(3, 8, 1);
+        sortAndPrintDescending(list);
+    }
+}
+
+Prints 8 3 1. Reverse comparator inverts natural ascending order.
+​
+#Thought Process
+Natural sorted() ascending; descending needs explicit Comparator.reverseOrder(), which flips Integer::compareTo. Stable sort preserves relative order of equals. Print via method reference for conciseness.
+​
+#Edge Cases Analysis
+Empty list: No output.​
+Null list: NPE on stream(); null-check.
+Null elements: NPE during comparison; filter Objects::nonNull.
+Duplicates: Kept, stable (e.g., → 3,3).
+Single element: Prints as-is.
+Large/negatives: Handles INT_MIN to MAX; stable TimSort O(n log n). Parallel possible but print unordered effectively
