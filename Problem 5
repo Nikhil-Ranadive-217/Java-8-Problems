@@ -1,0 +1,64 @@
+#Question:
+Sort and print the numbers in a list in ascending order.
+Input:
+List<Integer> list = Arrays.asList(5, 2, 9, 1);
+
+
+#Solution
+Sorting a list in ascending order with Java 8 Streams uses the sorted() intermediate operation followed by a terminal operation like forEach to print. For Integer, the natural order is ascending numerical order.
+​
+#Step-by-step logic
+Take the input List<Integer>.
+Convert it to a stream using list.stream().
+Call sorted() with no arguments to sort by natural order (ascending for integers).
+Use forEach(System.out::println) to print each sorted number on a new line.
+​
+#Java 8 code implementation
+
+import java.util.Arrays;
+import java.util.List;
+
+public class SortAndPrintAscending {
+
+    public static void sortAndPrint(List<Integer> numbers) {
+        numbers.stream()       // create a stream from the list
+               .sorted()       // sort in natural (ascending) order
+               .forEach(System.out::println); // print each element
+    }
+
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(5, 1, 4, 2, 3, 0, -1);
+        sortAndPrint(numbers);
+    }
+}
+
+This prints -1, 0, 1, 2, 3, 4, 5 in ascending order.
+​
+
+#Thought process
+sorted() without a comparator uses the natural ordering defined by Comparable of the element type, which for Integer is ascending numerical order.
+A stream is immutable; the original list is not modified unless you explicitly collect back into a new list.
+Using forEach(System.out::println) is a simple terminal operation to consume and print the sorted stream.
+
+
+If a sorted list is needed instead of just printing, collect it:
+
+#Java 8 code implementation
+import java.util.stream.Collectors;
+
+// inside sortAndPrint if you want list:
+List<Integer> sorted = numbers.stream()
+                              .sorted()
+                              .collect(Collectors.toList());
+
+sorted.forEach(System.out::println);
+
+#Edge cases analysis
+Empty list: Stream has no elements; sorted() and forEach do nothing, no exception.
+Null list reference: Calling numbers.stream() throws NullPointerException; caller must null-check.
+List containing null values: sorted() will throw NullPointerException because comparison with null is not defined for Integer natural order.
+To handle, either filter out nulls (filter(Objects::nonNull)) or avoid nulls by contract.
+Already sorted list: sorted() still processes but effectively keeps same order; stable sort for ordered streams.
+Duplicates: All duplicates are kept; sort is stable but for equal integers order is irrelevant.
+Very large lists: Sorting is O(nlogn)
+O(nlogn). For very large data, you can use parallelStream().sorted() for potential performance gains, but printing becomes a bottleneck and order is still globally sorted.
