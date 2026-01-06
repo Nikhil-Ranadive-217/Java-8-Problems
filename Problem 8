@@ -1,0 +1,44 @@
+Question:
+Find and print the smallest value.
+Input:
+List<Integer> list = Arrays.asList(8, 2, 13, 6);
+
+Solution:-
+Java 8 Streams find the minimum using the min(Comparator) terminal operation on a stream of Integer values. For input [8, 2, 13, 6], it prints 2.
+
+#Step-by-Step Logic
+Stream the list via stream(). 
+Call min(Comparator.naturalOrder()) to get Optional<Integer> with smallest by natural order.
+Use ifPresent(System.out::println) to print if present.
+​
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
+public class FindMinPrint {
+    public static void findAndPrintMin(List<Integer> numbers) {
+        numbers.stream()
+               .min(Comparator.naturalOrder())
+               .ifPresent(System.out::println);
+    }
+
+    public static void main(String[] args) {
+        List<Integer> list = Arrays.asList(8, 2, 13, 6);
+        findAndPrintMin(list);
+    }
+}
+
+Prints 2. Optional.ifPresent safe; no .get() NPE risk.
+​
+#Thought Process
+min(comparator) reduces to smallest via comparisons; natural order ascending for Integer (smallest first). Optional handles empty. Alternatives: reduce(Integer::min), mapToInt().min(); min most direct.
+​
+#Edge Cases Analysis
+Empty list: Empty Optional, nothing prints.​
+Null list: NPE on stream(); null-check.
+Null elements: NPE on comparison; filter Objects::nonNull.​
+Single element: Returns it.
+All equals: Returns any.
+Negatives/large: Handles full int range.
