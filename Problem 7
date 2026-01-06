@@ -1,0 +1,43 @@
+Question:Find and print the largest number.
+Input:
+List<Integer> list = Arrays.asList(11, 7, 19, 3);
+
+Solution:-
+Java 8 Streams find the maximum using the max(Comparator) terminal operation on a stream of Integer values. For input [11, 7, 19, 3], it prints 19.
+
+#Step-by-Step Logic
+Stream the list via stream(). 
+Call max(Comparator.naturalOrder()) to get Optional<Integer> with largest by natural order. 
+Use ifPresent(System.out::println) to print if present.
+​
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
+public class FindMaxPrint {
+    public static void findAndPrintMax(List<Integer> numbers) {
+        numbers.stream()
+               .max(Comparator.naturalOrder())
+               .ifPresent(System.out::println);
+    }
+
+    public static void main(String[] args) {
+        List<Integer> list = Arrays.asList(11, 7, 19, 3);
+        findAndPrintMax(list);
+    }
+}
+
+Prints 19. Optional.ifPresent handles safely without .get() NPE risk.
+​
+#Thought Process
+max(comparator) reduces stream to largest via comparisons. Natural order ascending for Integer. Returns Optional for empty safety. Alternatives like reduce(Integer::max) or mapToInt().max() possible; max clearest for single max.
+​
+#Edge Cases Analysis
+Empty list: Empty Optional, nothing prints (no NPE).​
+Null list: NPE on stream(); null-check.
+Null elements: NPE if null compared; filter Objects::nonNull first.​
+Single element: Returns that element.
+All equals: Returns any (first stable).
+Negatives/large: Handles INT_MIN/MAX fine.
