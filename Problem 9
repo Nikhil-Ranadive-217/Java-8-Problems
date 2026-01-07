@@ -1,0 +1,42 @@
+Question:
+Print the sum of all elements in the list.
+
+Input:
+List<Integer> list = Arrays.asList(4, 5, 6);
+
+Solution:-
+Java 8 Streams sum list elements efficiently using mapToInt().sum(). For input [4, 5, 6], it prints 15.
+
+#Step-by-Step Logic
+Stream the list via stream(). Convert Integer to primitive int with mapToInt(Integer::intValue). Call sum() on IntStream for total.
+​
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+
+public class SumAndPrint {
+    public static void sumAndPrint(List<Integer> numbers) {
+        int sum = numbers.stream()
+                         .mapToInt(Integer::intValue)
+                         .sum();
+        System.out.println(sum);
+    }
+
+    public static void main(String[] args) {
+        List<Integer> list = Arrays.asList(4, 5, 6);
+        sumAndPrint(list);
+    }
+}
+
+Prints 15. Avoids boxing overhead; direct primitive summation.
+​
+#Thought Process
+Stream<Integer> can't sum directly; mapToInt unboxes to IntStream.sum(). Alternatives: reduce(0, Integer::sum) or collect(summingInt); mapToInt.sum fastest, primitive-optimized.​
+
+#Edge Cases Analysis
+Empty list: Returns 0 (identity for sum).​
+Null list: NPE on stream(); null-check.
+Null elements: NPE on intValue(); filter first.
+Single element: Returns itself.
+Overflow: Int wraps (e.g., many INT_MAX); use mapToLong().sum() for safety. Large lists: Parallel ok via parallelStream().
