@@ -1,0 +1,44 @@
+Question:
+Convert all strings in a list to uppercase.
+
+Input:
+List<String> list = Arrays.asList("apple", "banana", "cherry");
+
+Solution:-
+Java 8 Streams convert strings to uppercase using map(String::toUpperCase). For input ["apple", "banana", "cherry"], it prints APPLE, BANANA, CHERRY on separate lines.
+
+#Step-by-Step Logic
+Stream the list with stream(). Apply map(String::toUpperCase) to transform each string. Terminate with forEach(System.out::println) to print uppercase versions.
+​
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+
+public class UppercaseStrings {
+    public static void printUppercase(List<String> strings) {
+        strings.stream()
+               .map(String::toUpperCase)
+               .forEach(System.out::println);
+    }
+
+    public static void main(String[] args) {
+        List<String> list = Arrays.asList("apple", "banana", "cherry");
+        printUppercase(list);
+    }
+}
+
+Prints each uppercase string on new line. Method reference simplifies lambda.
+​
+
+#Thought Process
+map transforms 1:1; String::toUpperCase standard for case change. forEach terminal for side-effect printing. Original list unchanged; stream creates new values lazily.
+​
+
+#Edge Cases Analysis
+Empty list: No output.​
+Null list: NPE on stream(); null-check.
+Null elements: toUpperCase() on null → NPE; filter Objects::nonNull.
+Empty strings: "" → "".
+Mixed case: "Apple" → "APPLE".
+Non-ASCII: Locale-sensitive, defaults JVM locale; specify toUpperCase(Locale) if needed. Large lists: Sequential fine; parallel for throughput.
