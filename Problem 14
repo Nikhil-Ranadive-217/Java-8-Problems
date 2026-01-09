@@ -1,0 +1,45 @@
+Question:
+Skip the first three elements and print the rest.
+Input:
+List<String> list = Arrays.asList("a", "b", "c", "d", "e");
+
+Solution:
+
+Java 8 Streams skip first three elements using skip(3) intermediate operation, then print remaining via forEach. For input ["a", "b", "c", "d", "e"], prints d and e.
+
+#Step-by-Step Logic
+Stream the list via stream(). Call skip(3) to discard first 3 elements. Terminate with forEach(System.out::println) to print remaining strings.
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+
+public class SkipFirstThree {
+    public static void skipAndPrint(List<String> strings) {
+        strings.stream()
+               .skip(3)
+               .forEach(System.out::println);
+    }
+
+    public static void main(String[] args) {
+        List<String> list = Arrays.asList("a", "b", "c", "d", "e");
+        skipAndPrint(list);
+    }
+}
+
+Prints:
+d
+e
+
+#Thought Process
+skip(n) discards first n elements, preserving order of remainder. Lazy operation; only executes when terminal op called. Simpler than manual indexing or sublist slicing.
+
+#Edge Cases Analysis
+List shorter than 3: Skips all available, prints nothing (e.g., [1,2] → nothing).
+Exactly 3 elements: Skips all, prints nothing.
+Empty list: Nothing to skip, nothing prints.
+Null list: NPE on stream(); requires null-check.
+Null elements: skip passes through; println prints "null".
+Large skip(n): Skips min(n, size); prints remainder or nothing.
+Single element: skip(3) → nothing printed.
