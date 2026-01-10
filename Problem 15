@@ -1,0 +1,45 @@
+Question:
+Print only the first two elements.
+Input:
+List<Integer> list = Arrays.asList(100, 101, 102, 103);
+
+Solution:
+Java 8 Streams print first two elements using limit(2) terminal-limiting operation after streaming. For input [100, 101, 102, 103], prints 100 and 101.
+
+#Step-by-Step Logic
+Stream the list via stream(). Apply limit(2) to take only first 2 elements. Terminate with forEach(System.out::println) to print them.
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+
+public class PrintFirstTwo {
+    public static void printFirstTwo(List<Integer> numbers) {
+        numbers.stream()
+               .limit(2)
+               .forEach(System.out::println);
+    }
+
+    public static void main(String[] args) {
+        List<Integer> list = Arrays.asList(100, 101, 102, 103);
+        printFirstTwo(list);
+    }
+}
+
+Prints:
+
+100
+101
+
+#Thought Process
+limit(n) caps stream at first n elements, short-circuiting evaluation. Preserves encounter order. Paired with forEach for printing. Efficient O(min(n, size)) vs full traversal.
+
+#Edge Cases Analysis
+Fewer than 2 elements: Prints all available (e.g., [1] prints 1).
+Empty list: Nothing prints.
+Exactly 2 elements: Prints both.
+Null list: NPE on stream(); null-check required.
+Null elements: Early nulls printed as "null"; println handles.
+Large n: Still limits to first 2.
+Parallel stream: limit non-deterministic order; use sequential for stability.
