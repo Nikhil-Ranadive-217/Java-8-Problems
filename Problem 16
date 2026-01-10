@@ -1,0 +1,45 @@
+Question:
+Count how many elements are greater than 50.
+Input:
+List<Integer> list = Arrays.asList(10, 55, 60, 35, 85);
+
+Solutions:
+Java 8 Streams count elements >50 using filter with predicate then count(). For input [10, 55, 60, 35, 85], returns and prints 3.
+
+#Step-by-Step Logic
+Stream the list via stream(). Filter with filter(num -> num > 50). Call count() terminal for matching count as long.
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+
+public class CountGreaterThan50 {
+    public static void countAndPrintGreaterThan50(List<Integer> numbers) {
+        long count = numbers.stream()
+                            .filter(num -> num > 50)
+                            .count();
+        System.out.println(count);
+    }
+
+    public static void main(String[] args) {
+        List<Integer> list = Arrays.asList(10, 55, 60, 35, 85);
+        countAndPrintGreaterThan50(list);
+    }
+}
+
+Prints 3. 
+
+Processes full stream; O(n) time.
+
+#Thought Process
+filter intermediate selects >50 (predicate boolean). count() terminal reduces to size. Simple, declarative vs manual loop. Returns long for large lists.
+
+#Edge Cases Analysis
+Empty list: Returns 0L.
+Null list: NPE on stream(); null-check.
+Null elements: null > 50 false (no NPE).
+All ≤50: 0.
+All >50: Returns size.
+Exactly 50: Filtered out (> strict).
+Negatives: false. Large: Fine up to Integer.MAX_VALUE.
