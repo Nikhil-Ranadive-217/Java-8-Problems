@@ -1,0 +1,49 @@
+Question:
+Given a list of string lists, flatten them into a single list.
+
+Input:
+List<List<String>> list = Arrays.asList(Arrays.asList("a", "b"), Arrays.asList("c", "d"));
+
+Solution:
+
+Java 8 Streams flatten nested List<String> using flatMap(List::stream). For input [["a", "b"], ["c", "d"]], produces flat ["a", "b", "c", "d"].
+
+#Step-by-Step Logic
+Stream outer list via stream(). Apply flatMap(innerList -> innerList.stream()) to map each inner list to its stream and flatten. Collect to new List<String> with Collectors.toList().
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class FlattenNestedLists {
+    public static List<String> flatten(List<List<String>> nested) {
+        return nested.stream()
+                     .flatMap(List::stream)
+                     .collect(Collectors.toList());
+    }
+
+    public static void main(String[] args) {
+        List<List<String>> list = Arrays.asList(
+            Arrays.asList("a", "b"), 
+            Arrays.asList("c", "d")
+        );
+        List<String> flat = flatten(list);
+        System.out.println(flat);  // [a, b, c, d]
+    }
+}
+
+Method reference List::stream concise; preserves encounter order.
+​
+
+#Thought Process
+flatMap applies function returning Stream, flattening nested streams into one. List::stream perfect mapper for inner lists. collect(toList()) gathers result. Avoids nested loops declaratively.
+
+#Edge Cases Analysis
+Empty outer: Returns [].
+Outer with empty inners: [].
+Null outer: NPE on stream().
+Null inner list: null.stream() NPE; filter out.
+Null elements in inners: Preserved in flat.
+Uneven inners: All concatenated.
