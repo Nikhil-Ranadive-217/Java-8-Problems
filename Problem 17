@@ -1,0 +1,45 @@
+Question:
+Remove duplicate strings from a list.
+Input:
+List<String> list = Arrays.asList("dog", "cat", "dog", "bird");
+
+Solution:
+
+Java 8 Streams remove duplicate strings using distinct() intermediate operation. For input ["dog", "cat", "dog", "bird"], produces unique ["dog", "cat", "bird"].
+
+#Step-by-Step Logic
+Stream the list via stream(). Apply distinct() to retain first occurrence of each unique value. Collect to new list with Collectors.toList().
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class RemoveDuplicates {
+    public static List<String> removeDuplicates(List<String> strings) {
+        return strings.stream()
+                      .distinct()
+                      .collect(Collectors.toList());
+    }
+
+    public static void main(String[] args) {
+        List<String> list = Arrays.asList("dog", "cat", "dog", "bird");
+        List<String> unique = removeDuplicates(list);
+        System.out.println(unique);  // [dog, cat, bird]
+    }
+}
+
+Original list unchanged; returns new ArrayList with uniques in encounter order.
+
+#Thought Process
+distinct() uses equals() and hashCode() to deduplicate, keeping first seen. Stateful intermediate; stable order. collect(toList()) terminal creates list. Efficient O(n) average via HashSet internally.
+
+#Edge Cases Analysis
+Empty list: Returns [].
+No duplicates: Returns copy of input.
+All duplicates: Returns list with first element [x].
+Null list: NPE on stream(); null-check.
+Null elements: Keeps first null; subsequent nulls removed (null.equals(null)=true).
+Case-sensitive: "Dog" != "dog" (String equals).
+Large lists: Scales well; parallel preserves first-seen semantics poorly.
