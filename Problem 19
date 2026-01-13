@@ -1,0 +1,45 @@
+Question:
+Store the squares of each number into a Set.
+Input:
+List<Integer> list = Arrays.asList(2, 3, 4);
+
+Solution:
+
+Java 8 Streams store squares in a Set using map to square then collect(Collectors.toSet()). For input [2, 3, 4], produces Set {4, 9, 16} (duplicates auto-removed).
+
+#Step-by-Step Logic
+Stream the list via stream(). Map each num to num * num square. Collect to Set<Integer> with Collectors.toSet() (HashSet impl).
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+public class SquaresToSet {
+    public static Set<Integer> squaresToSet(List<Integer> numbers) {
+        return numbers.stream()
+                      .map(num -> num * num)
+                      .collect(Collectors.toSet());
+    }
+
+    public static void main(String[] args) {
+        List<Integer> list = Arrays.asList(2, 3, 4);
+        Set<Integer> squares = squaresToSet(list);
+        System.out.println(squares);  // [4, 9, 16] (order not guaranteed)
+    }
+}
+
+Prints {4, 9, 16} (HashSet unordered).
+
+#Thought Process
+map transforms to squares. toSet() collector deduplicates via hashCode/equals. Ideal for uniqueness; LinkedHashSet preservers order if needed via toCollection(LinkedHashSet::new).
+
+#Edge Cases Analysis
+Empty list: Empty Set.
+Null list: NPE on stream().
+Null elements: null * null NPE; filter nulls.
+Zero: {0}.
+Negatives: {4, 9} (-2→4).
+Overflow: Int wraps; use Long map for safety. Duplicates input: Already unique squares.
