@@ -1,0 +1,44 @@
+Question:
+Concatenate the first two words that have even lengths from a list.
+Input:
+List<String> words = Arrays.asList("apple", "banana", "cherry", "date");
+
+Solution:
+Java 8 Streams concatenate first two even-length words using filter, limit(2), and joining(" "). For input ["apple", "banana", "cherry", "date"] (lengths 5,6,6,4), "banana cherry".
+
+#Step-by-Step Logic
+Stream words via stream(). Filter even lengths: filter(word -> word.length() % 2 == 0). Limit to 2: limit(2). Collect joined: collect(joining(" ")).
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class ConcatEvenLengthWords {
+    public static String concatFirstTwoEven(List<String> words) {
+        return words.stream()
+                    .filter(word -> word.length() % 2 == 0)
+                    .limit(2)
+                    .collect(Collectors.joining(" "));
+    }
+
+    public static void main(String[] args) {
+        List<String> words = Arrays.asList("apple", "banana", "cherry", "date");
+        String result = concatFirstTwoEven(words);
+        System.out.println(result);  // banana cherry
+    }
+}
+
+Prints banana cherry. Short-circuits after 2 matches.
+
+#Thought Process
+Filter selects even-length (6,6,4 → banana,cherry,date). limit(2) takes first two. joining(" ") efficient concat. Handles <2 gracefully (empty or single).
+
+#Edge Cases Analysis
+<2 even-length: Empty string if 0, single word if 1.
+Empty list: Empty string.
+Null list: NPE.
+Null words: null.length() NPE; filter nulls.
+Empty strings: Length 0 even → included.
+All odd: Empty.
