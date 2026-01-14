@@ -1,0 +1,43 @@
+Question:
+Find all numbers (as Strings) starting with '1'.
+Input:
+List<String> nums = Arrays.asList("10", "15", "8", "49", "98", "32", "15");
+
+Solution:-
+Java 8 Streams find strings starting with '1' using filter with startsWith("1"). For input, returns ["10", "15", "15"].
+
+#Step-by-Step Logic
+Stream the list via stream(). Filter with filter(num -> num.startsWith("1")). Collect to List<String> using Collectors.toList().
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class NumbersStartingWith1 {
+    public static List<String> findStartingWith1(List<String> nums) {
+        return nums.stream()
+                   .filter(num -> num.startsWith("1"))
+                   .collect(Collectors.toList());
+    }
+
+    public static void main(String[] args) {
+        List<String> nums = Arrays.asList("10", "15", "8", "49", "98", "32", "15");
+        List<String> result = findStartingWith1(nums);
+        System.out.println(result);  // [10, 15, 15]
+    }
+}
+
+Returns ["10", "15", "15"] preserving order/duplicates.
+
+#Thought Process
+startsWith("1") efficient prefix check. String method, case-sensitive. filter selects matches. toList() collects result. Simple predicate chain.
+
+#Edge Cases Analysis
+Empty list: [].
+Null list: NPE on stream().
+Null elements: null.startsWith("1") → NPE; filter Objects::nonNull.
+Empty strings: "" false.
+Single "1": ["1"] true.
+Leading zeros: "100" true.
