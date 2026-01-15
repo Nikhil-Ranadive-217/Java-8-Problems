@@ -1,0 +1,57 @@
+Question:
+Print all duplicate elements in a list.
+Input:
+List<Integer> list = Arrays.asList(1, 2, 3, 2, 6, 6, 7);
+
+Solution:-
+
+Java 8 Streams print duplicates by identifying elements appearing >1 time using groupingBy with counting. For input [1, 2, 3, 2, 6, 6, 7], prints 2 and 6.
+
+#Step-by-Step Logic
+Stream list via stream(). Group into Map<Integer, Long> freq with Collectors.groupingBy(Function.identity(), Collectors.counting()). Filter entries where count > 1. Print keys.
+
+#Java Implementation
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+public class PrintDuplicates {
+    public static void printDuplicates(List<Integer> numbers) {
+        numbers.stream()
+               .collect(Collectors.groupingBy(
+                   Function.identity(),
+                   Collectors.counting()
+               ))
+               .entrySet().stream()
+               .filter(entry -> entry.getValue() > 1)
+               .map(entry -> entry.getKey())
+               .forEach(System.out::println);
+    }
+
+    public static void main(String[] args) {
+        List<Integer> list = Arrays.asList(1, 2, 3, 2, 6, 6, 7);
+        printDuplicates(list);
+    }
+}
+
+Prints:
+text
+2
+6
+
+#Another Approach:
+
+Set<Integer> set = new HashSet<>();
+list.stream().filter(n -> !set.add(n)).forEach(System.out::println);
+
+#Thought Process
+groupingBy(identity, counting) builds freq map. Filter >1 selects duplicates. map to key, forEach prints. O(n) time, processes once. Avoids mutable Set side-effects.
+
+#Edge Cases Analysis
+Empty list: Nothing prints.
+No duplicates: Nothing prints.
+All duplicates: Prints each unique >1.
+Null list: NPE.
+Null elements: Groups nulls if multiple.
