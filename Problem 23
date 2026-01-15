@@ -1,0 +1,45 @@
+Question:
+Given an array, print only even numbers.
+Input:
+int[] arr = {3, 2, 7, 8, 6};
+
+Solution:-
+
+Java 8 Streams print even numbers from int[] using Arrays.stream(arr).filter(n -> n % 2 == 0).forEach. For input {3, 2, 7, 8, 6}, prints 2, 8, 6.
+
+#Step-by-Step Logic
+Convert array to IntStream via Arrays.stream(arr). Filter evens: filter(n -> n % 2 == 0). Print with forEach(System.out::println).
+
+#Java Implementation
+
+import java.util.Arrays;
+
+public class PrintEvenNumbers {
+    public static void printEvens(int[] arr) {
+        Arrays.stream(arr)
+              .filter(n -> n % 2 == 0)
+              .forEach(System.out::println);
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {3, 2, 7, 8, 6};
+        printEvens(arr);
+    }
+}
+
+Prints:
+text
+2
+8
+6
+
+#Thought Process
+Arrays.stream(arr) creates primitive IntStream (efficient, no boxing). filter predicate % 2 == 0 selects evens. forEach terminal prints. Preserves order.
+
+#Edge Cases Analysis
+Empty array: Nothing prints.
+Null array: NPE on Arrays.stream(null).
+No evens: Nothing prints.
+Zero: Even (0 % 2 == 0).
+Negatives: -2 % 2 == 0 even.
+Single element: Prints if even.
