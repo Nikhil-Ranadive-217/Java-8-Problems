@@ -1,0 +1,43 @@
+Problem:
+Group a list of strings by their lengths.
+Input:
+List<String> words = Arrays.asList("cat", "house", "bird", "dog");
+
+Solutions:
+
+Java 8 Streams group strings by length using Collectors.groupingBy(String::length). For input ["cat", "house", "bird", "dog"] (lengths 3,5,4,3), produces {3=["cat", "dog"], 4=["bird"], 5=["house"]}.
+
+#Step-by-Step Logic
+Stream words via stream(). Collect with groupingBy(String::length) creating Map<Integer, List<String>>.
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+public class GroupByLength {
+    public static Map<Integer, List<String>> groupByLength(List<String> words) {
+        return words.stream()
+                    .collect(Collectors.groupingBy(String::length));
+    }
+
+    public static void main(String[] args) {
+        List<String> words = Arrays.asList("cat", "house", "bird", "dog");
+        Map<Integer, List<String>> grouped = groupByLength(words);
+        System.out.println(grouped);
+    }
+}
+
+Prints {3=[cat, dog], 4=[bird], 5=[house]} (HashMap order varies).
+
+#Thought Process
+groupingBy(classifier) partitions by key (length); default toList() downstream. String::length concise key extractor. Single-pass O(n).
+
+#Edge Cases Analysis
+Empty list: Empty Map.
+Null list: NPE.
+Null elements: Key null.length() NPE; filter.
+Empty strings: Group {0=[ ]}.
+All same length: {len=[all]}.
