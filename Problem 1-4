@@ -1,0 +1,74 @@
+Write a custom collector to join strings with a dash (-).
+
+Input:
+List<String> items = Arrays.asList("A", "B", "C");
+
+Solutions:-
+
+Java 8 custom collector joins strings with dash using Collector.of() implementing all required SPI methods. For input ["A", "B", "C"], produces "A-B-C".
+
+#Step-by-Step Logic
+Create Collector.of(supplier, accumulator, combiner, finisher).
+
+Supplier: "" (empty string identity)
+
+Accumulator: Add to result with dash if not first
+
+Combiner: Merge parallel results without double dash
+
+Finisher: Return result unchanged
+
+#Complete Implementation
+
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.Arrays;
+
+public class DashJoinCollector {
+    public static Collector<String, StringBuilder, String> dashJoining() {
+        return Collector.of(
+            StringBuilder::new,                                    // supplier
+            (builder, str) -> {                                    // accumulator
+                if (builder.length() > 0) builder.append("-");
+                builder.append(str);
+            },
+            (left, right) -> {                                     // combiner
+                if (left.length() == 0) return right;
+                if (right.length() == 0) return left;
+                return left.append("-").append(right);
+            },                                                     // finisher
+            StringBuilder::toString                                // finisher
+        );
+    }
+
+    public static void main(String[] args) {
+        List<String> items = Arrays.asList("A", "B", "C");
+        String result = items.stream()
+                            .collect(dashJoining());
+        System.out.println(result);  // A-B-C
+    }
+}
+
+Another Approach:-
+String joined = items.stream().collect(
+    Collector.of(
+        () -> new StringBuilder(),
+        (sb, s) -> { if (sb.length() > 0) sb.append('-'); sb.append(s); },
+        (sb1, sb2) -> { if (sb1.length() > 0 && sb2.length() > 0) sb1.append('-'); sb1.append(sb2); return sb1; },
+        StringBuilder::toString
+    )
+);
+System.out.println(joined);
+
+
+#Thought Process
+StringBuilder mutable accumulator avoids String immutability overhead. Combiner handles parallel execution by checking existing content. Method reference StringBuilder::toString clean finisher. length()>0 detects first element avoiding leading dash.
+
+#Edge Cases Analysis
+Empty list: Empty StringBuilder → ""
+Single element: No dash → original string
+Null elements: NPE in append(null)
+Null list: NPE on stream()
+Parallel streams: Combiner ensures single dash between sub-results
+Large lists: Efficient O(n) StringBuilder operations
