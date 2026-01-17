@@ -1,0 +1,42 @@
+Find the longest string in a list using reduce().
+
+Input:
+List<String> data = Arrays.asList("apple", "banana", "pear", "watermelon");
+
+Solutions:-
+
+Java 8 reduce finds longest string by iteratively comparing lengths. For input ["apple", "banana", "pear", "watermelon"], returns "watermelon" (10 chars).
+
+#Step-by-Step Logic
+Stream strings via stream(). reduce with binary operator (s1, s2) -> s1.length() > s2.length() ? s1 : s2 picks longer each step. Returns Optional<String>.
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+
+public class LongestStringReduce {
+    public static void findLongest(List<String> data) {
+        data.stream()
+            .reduce((s1, s2) -> s1.length() > s2.length() ? s1 : s2)
+            .ifPresent(System.out::println);
+    }
+
+    public static void main(String[] args) {
+        List<String> data = Arrays.asList("apple", "banana", "pear", "watermelon");
+        findLongest(data);
+    }
+}
+
+Prints watermelon. Ties keep first.
+​
+
+#Thought Process
+reduce folds stream with accumulator; comparator lambda selects max length. No identity needed (2-arg). ifPresent handles empty. Efficient O(n), single pass.
+
+#Edge Cases Analysis
+Empty: Empty Optional, no print.
+Single: Returns it.
+Tie lengths: First wins.
+Null list: NPE.
+Null strings: NPE on length.
