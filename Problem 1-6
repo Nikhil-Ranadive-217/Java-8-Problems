@@ -1,0 +1,44 @@
+Question:
+Find the first string starting with "b" in a list.
+
+Input:
+List<String> list = Arrays.asList("apple", "banana", "cherry");
+
+Solutions:-
+
+Java 8 Streams find first "b"-starting string using filter + findFirst(). For input ["apple", "banana", "cherry"], returns "banana".
+
+#Step-by-Step Logic
+Stream list → filter(s -> s.startsWith("b")) → findFirst() → Optional.ifPresent print.
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+
+public class FirstStartingWithB {
+    public static void findFirstB(List<String> list) {
+        list.stream()
+            .filter(s -> s.startsWith("b"))
+            .findFirst()
+            .ifPresent(System.out::println);
+    }
+
+    public static void main(String[] args) {
+        List<String> list = Arrays.asList("apple", "banana", "cherry");
+        findFirstB(list);
+    }
+}
+
+Prints banana. Short-circuits at first match.
+
+#Thought Process
+filter predicate startsWith("b") case-sensitive. findFirst() deterministic, ordered, short-circuiting. ifPresent safe handling. Efficient O(n worst-case).
+
+#Edge Cases Analysis
+No match: Empty Optional, nothing prints.
+Empty list: No match.
+First element: Immediate return.
+Null list: NPE.
+Null elements: null.startsWith("b") NPE—filter nulls first.
+Case: "Banana" false.
