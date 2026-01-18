@@ -1,0 +1,56 @@
+Question:
+Use peek() to print intermediate results in a map operation.
+
+Input:
+List<Integer> source = Arrays.asList(2, 4, 6);
+
+Solutions:-
+
+Java 8 peek() prints intermediate map results for debugging/inspection. For input [2, 4, 6], shows original → doubled → squared.
+
+#Step-by-Step Logic
+Stream → peek print originals → map double → peek print doubled → map square → forEach final print.
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+
+public class PeekIntermediate {
+    public static void mapWithPeeks(List<Integer> source) {
+        source.stream()
+              .peek(n -> System.out.println("Original: " + n))
+              .map(n -> n * 2)
+              .peek(n -> System.out.println("Doubled: " + n))
+              .map(n -> n * n)
+              .forEach(n -> System.out.println("Squared: " + n));
+    }
+
+    public static void main(String[] args) {
+        List<Integer> source = Arrays.asList(2, 4, 6);
+        mapWithPeeks(source);
+    }
+}
+
+Output:
+
+Original: 2
+Doubled: 4
+Squared: 16
+Original: 4
+Doubled: 8
+Squared: 64
+Original: 6
+Doubled: 12
+Squared: 144
+
+#Thought Process
+peek(Consumer) non-terminal intermediate for side-effects (logging/debug). Called per element after prior ops, before next. Lazy—triggers only on terminal forEach. Reveals pipeline state.
+
+#Edge Cases Analysis
+Empty list: No peeks called.
+Null list: NPE on stream().
+Null elements: NPE in peek/map if unhandled.
+No terminal: Peeks never execute (lazy).
+Parallel: Unordered prints.
+
