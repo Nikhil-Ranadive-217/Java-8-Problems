@@ -1,0 +1,51 @@
+Question:-Sum integers present as strings, ignoring non-numeric values.
+Input:
+List<String> vals = Arrays.asList("10", "abc", "30", "xyz");
+
+Solutions:-
+
+Java 8 Streams sum numeric strings by filtering parseable values then mapToInt(Integer::parseInt).sum(). For ["10", "abc", "30", "xyz"], sums 10+30=40.
+
+#Step-by-Step Logic
+Stream → filter numeric via tryParse → mapToInt(Integer::parseInt) → sum().
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Predicate;
+
+public class SumNumericStrings {
+    public static int sumNumeric(List<String> vals) {
+        Predicate<String> isNumeric = str -> {
+            try {
+                Integer.parseInt(str);
+                return true;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        };
+        
+        return vals.stream()
+                   .filter(isNumeric)
+                   .mapToInt(Integer::parseInt)
+                   .sum();
+    }
+
+    public static void main(String[] args) {
+        List<String> vals = Arrays.asList("10", "abc", "30", "xyz");
+        System.out.println(sumNumeric(vals));  // 40
+    }
+}
+
+#Thought Process
+Predicate safely tests parseability avoiding NPE/NumberFormatException in main pipeline. mapToInt unboxes efficiently. Single-pass O(n).
+​
+
+#Edge Cases Analysis
+Empty: 0.
+All non-numeric: 0.
+Null list: NPE.
+Null strings: parseInt(null) NPE—add null-check.
+Overflow: parseInt throws.
+Negatives: " -5" parsed correctly.
