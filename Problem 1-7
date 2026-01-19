@@ -1,0 +1,42 @@
+Question: Flatten a list of sentences into a list of unique words.
+Input:
+List<String> sentences = Arrays.asList("hello world", "hello java");
+
+Solutions:-
+
+Java 8 Streams flatten sentences into unique words using flatMap + split + distinct. For input ["hello world", "hello java"], returns ["hello", "world", "java"].
+
+#Step-by-Step Logic
+Stream sentences → flatMap(sentence -> Arrays.stream(sentence.split("\\s+"))) → distinct() → collect(toList()).
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class FlattenUniqueWords {
+    public static List<String> flattenUniqueWords(List<String> sentences) {
+        return sentences.stream()
+                       .flatMap(sentence -> Arrays.stream(sentence.split("\\s+")))
+                       .distinct()
+                       .collect(Collectors.toList());
+    }
+
+    public static void main(String[] args) {
+        List<String> sentences = Arrays.asList("hello world", "hello java");
+        List<String> words = flattenUniqueWords(sentences);
+        System.out.println(words);  // [hello, world, java]
+    }
+}
+
+#Thought Process
+flatMap essential: split("\\s+") → array → Arrays.stream → flattens nested streams. \\s+ handles multiple spaces. distinct() removes "hello" duplicate. Preserves first-occurrence order.
+​
+
+#Edge Cases Analysis
+Empty outer list: [].
+Empty sentences: Skipped (empty stream).
+Multiple spaces: \\s+ collapses.
+Null sentences: NPE on split.
+Trailing spaces: Empty strings filtered by distinct? No—distinct("") keeps if present.
