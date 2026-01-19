@@ -38,6 +38,12 @@ public class SumNumericStrings {
     }
 }
 
+#Another Approach:-int sum = vals.stream()
+    .filter(s -> s.matches("\\d+"))
+    .mapToInt(Integer::parseInt)
+    .sum();
+System.out.println(sum);
+
 #Thought Process
 Predicate safely tests parseability avoiding NPE/NumberFormatException in main pipeline. mapToInt unboxes efficiently. Single-pass O(n).
 ​
