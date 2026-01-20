@@ -1,0 +1,46 @@
+Question:Count how many times each word appears.
+Input:
+List<String> data = Arrays.asList("a", "b", "a", "c", "b", "a");
+
+Solutions:-
+
+Java 8 Streams count word occurrences using Collectors.groupingBy with Collectors.counting(). For input ["a", "b", "a", "c", "b", "a"], produces {"a"=3, "b"=2, "c"=1}.
+
+#Step-by-Step Logic
+Stream words → groupingBy(Function.identity(), counting()) → Map<String, Long> frequency map.
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+public class WordFrequency {
+    public static Map<String, Long> countWords(List<String> data) {
+        return data.stream()
+                   .collect(Collectors.groupingBy(
+                       Function.identity(),
+                       Collectors.counting()
+                   ));
+    }
+
+    public static void main(String[] args) {
+        List<String> data = Arrays.asList("a", "b", "a", "c", "b", "a");
+        Map<String, Long> frequencies = countWords(data);
+        System.out.println(frequencies);  // {a=3, b=2, c=1}
+    }
+}
+
+#Thought Process
+groupingBy(identity, counting) creates frequency map in single pass. Function.identity() uses word itself as key. counting() downstream collector returns Long. O(n) time, HashMap storage.
+
+#Edge Cases Analysis
+Empty list: Empty Map.
+Single word: {word=1L}.
+All duplicates: {word=n}.
+Null list: NPE on stream().
+Null elements: Groups null if multiple (null=count).
+Empty strings: {""=count}.
+
