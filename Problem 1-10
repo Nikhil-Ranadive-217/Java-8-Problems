@@ -33,6 +33,13 @@ public class WordFrequency {
     }
 }
 
+----------------------------------------------------------
+Map<String, Long> counts = data.stream()
+    .collect(Collectors.groupingBy(s -> s, Collectors.counting()));
+System.out.println(counts);
+
+------------------------------------------------------------
+
 #Thought Process
 groupingBy(identity, counting) creates frequency map in single pass. Function.identity() uses word itself as key. counting() downstream collector returns Long. O(n) time, HashMap storage.
 
