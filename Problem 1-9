@@ -101,6 +101,12 @@ public class GroupByPair {
     }
 }
 
+---------------------------------------------------------
+Map<Pair<String, String>, List<Record>> grouped =
+    records.stream()
+     .collect(Collectors.groupingBy(r -> Pair.of(r.getName(), r.getCity())));
+---------------------------------------------------------
+
 Sample Output:
 text
 (Alice, NYC) -> [Person{name='Alice', city='NYC'}, Person{name='Alice', city='NYC'}]
