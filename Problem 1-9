@@ -1,0 +1,120 @@
+Question: Group records by two fields using a pair (name, city).
+Input:
+List of objects with name and city.
+
+Solutions:-
+
+Java 8 Streams group objects by multiple fields using groupingBy with a custom Pair key class. Creates Map<Pair, List<Person>> grouping by (name, city).
+
+#Step-by-Step Logic
+Create immutable Pair<String,String> key class with equals/hashCode
+Stream Person objects → groupingBy(p -> new Pair(p.getName(), p.getCity()))
+Collect to Map<Pair, List<Person>>
+
+#Complete Implementation
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+class Person {
+    private String name;
+    private String city;
+    
+    public Person(String name, String city) {
+        this.name = name;
+        this.city = city;
+    }
+    
+    // getters, equals, hashCode, toString
+    public String getName() { return name; }
+    public String getCity() { return city; }
+    
+    @Override
+    public String toString() {
+        return "Person{" + "name='" + name + "', city='" + city + "'}";
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(name, person.name) && Objects.equals(city, person.city);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, city);
+    }
+}
+
+class Pair {
+    private final String name;
+    private final String city;
+    
+    public Pair(String name, String city) {
+        this.name = name;
+        this.city = city;
+    }
+    
+    public String getName() { return name; }
+    public String getCity() { return city; }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pair pair = (Pair) o;
+        return Objects.equals(name, pair.name) && Objects.equals(city, pair.city);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, city);
+    }
+    
+    @Override
+    public String toString() {
+        return "(" + name + ", " + city + ")";
+    }
+}
+
+public class GroupByPair {
+    public static Map<Pair, List<Person>> groupByNameCity(List<Person> people) {
+        return people.stream()
+                     .collect(Collectors.groupingBy(
+                         p -> new Pair(p.getName(), p.getCity())
+                     ));
+    }
+    
+    public static void main(String[] args) {
+        List<Person> people = Arrays.asList(
+            new Person("Alice", "NYC"),
+            new Person("Bob", "LA"),
+            new Person("Alice", "NYC"),
+            new Person("Charlie", "SF")
+        );
+        
+        Map<Pair, List<Person>> grouped = groupByNameCity(people);
+        grouped.forEach((key, list) -> 
+            System.out.println(key + " -> " + list));
+    }
+}
+
+Sample Output:
+text
+(Alice, NYC) -> [Person{name='Alice', city='NYC'}, Person{name='Alice', city='NYC'}]
+(Bob, LA) -> [Person{name='Bob', city='LA'}]
+(Charlie, SF) -> [Person{name='Charlie', city='SF'}]
+
+#Thought Process
+Custom Pair: Immutable key with proper equals/hashCode for HashMap.
+Classifier: Lambda p -> new Pair(...) extracts composite key.
+Single-pass: groupingBy efficient O(n). Default toList() downstream.
+
+#Edge Cases Analysis
+Empty list: Empty Map
+Null list: NPE on stream()
+Null fields: Pair(null,null) works if consistent
+All same pair: Single entry with full list
+Null Person: NPE in constructor/lambda
