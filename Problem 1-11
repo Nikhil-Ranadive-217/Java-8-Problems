@@ -1,0 +1,72 @@
+Question: Partition employees into those earning above $5,000 and those earning $5,000 or less.
+
+Input:
+List of Employee objects with a getSalary() method.
+
+Solutions:-
+
+Java 8 Streams partition employees by salary threshold using Collectors.partitioningBy(e -> e.getSalary() > 5000). Returns Map<Boolean, List<Employee>> where true=above $5K, false=≤$5K.
+
+#Step-by-Step Logic
+Stream employee list → collect(partitioningBy(salary > 5000)) → Access via get(true)/get(false).
+
+#Complete Implementation
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+class Employee {
+    private String name;
+    private double salary;
+    
+    public Employee(String name, double salary) {
+        this.name = name;
+        this.salary = salary;
+    }
+    
+    public String getName() { return name; }
+    public double getSalary() { return salary; }
+    
+    @Override
+    public String toString() {
+        return name + " ($" + salary + ")";
+    }
+}
+
+public class SalaryPartition {
+    public static Map<Boolean, List<Employee>> partitionBySalary(List<Employee> employees) {
+        return employees.stream()
+                       .collect(Collectors.partitioningBy(e -> e.getSalary() > 5000));
+    }
+    
+    public static void main(String[] args) {
+        List<Employee> employees = Arrays.asList(
+            new Employee("Alice", 6000),
+            new Employee("Bob", 4500),
+            new Employee("Charlie", 7000),
+            new Employee("Diana", 4000)
+        );
+        
+        Map<Boolean, List<Employee>> partitioned = partitionBySalary(employees);
+        
+        System.out.println("Above $5K: " + partitioned.get(true));
+        System.out.println("≤ $5K: " + partitioned.get(false));
+    }
+}
+
+Output:
+text
+Above $5K: [Alice ($6000.0), Charlie ($7000.0)]
+≤ $5K: [Bob ($4500.0), Diana ($4000.0)]
+
+#Thought Process
+partitioningBy creates boolean-keyed Map (always true/false keys). Single-pass O(n). Predicate salary > 5000 strict (5000 goes to false). Default toList() downstream collector.
+
+#Edge Cases Analysis
+Empty list: {true=[], false=[]}
+All above: {true=[all], false=[]}
+All ≤5000: {true=[], false=[all]}
+Exactly 5000: false (≤5000)
+Null list: NPE on stream()
+Null salary: NPE in predicate
+
