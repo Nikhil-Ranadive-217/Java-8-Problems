@@ -1,0 +1,48 @@
+Question: Find the string with the maximum number of vowels.
+
+Input:
+List<String> words = Arrays.asList("hello", "world", "aeiou");
+
+Solutions:-
+
+Java 8 Streams find max-vowel string using max() with custom Comparator counting vowels. For input ["hello", "world", "aeiou"], returns "aeiou" (5 vowels).
+
+#Step-by-Step Logic
+Stream words → max(Comparator.comparingInt(this::vowelCount)) where vowelCount returns vowel tally.
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Comparator;
+
+public class MaxVowelsString {
+    
+    private static int vowelCount(String s) {
+        return (int) s.chars()
+                      .filter(ch -> "aeiouAEIOU".indexOf(ch) != -1)
+                      .count();
+    }
+    
+    public static void findMaxVowels(List<String> words) {
+        words.stream()
+             .max(Comparator.comparingInt(MaxVowelsString::vowelCount))
+             .ifPresent(System.out::println);
+    }
+    
+    public static void main(String[] args) {
+        List<String> words = Arrays.asList("hello", "world", "aeiou");
+        findMaxVowels(words);  // aeiou
+    }
+}
+
+#Thought Process
+vowelCount uses chars().filter().count() for O(n) per string. comparingInt(vowelCount) creates length-then-lexicographic comparator. max() returns Optional. Ties pick first by stable sort.
+
+#Edge Cases Analysis
+Empty list: Empty Optional, nothing prints.
+No vowels: Longest non-vowel string (0 vowels).
+All same vowels: First by encounter order.
+Null list: NPE on stream().
+Null strings: NPE in chars(); filter first.
+Empty strings: 0 vowels, shortest.
