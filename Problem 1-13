@@ -1,0 +1,49 @@
+Question: Concatenate integer values into a string using reduce().
+
+Input:
+List<Integer> nums = Arrays.asList(1, 2, 3, 4);
+
+Solutions:-
+
+Java 8 reduce() concatenates integers into string by mapping to String then folding with String::concat. For input [1, 2, 3, 4], produces "1234".
+
+#Step-by-Step Logic
+Stream integers → map(Object::toString) → reduce("", String::concat) → Optional result.
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+
+public class ConcatIntegersReduce {
+    public static void concatWithReduce(List<Integer> nums) {
+        String result = nums.stream()
+                           .map(Object::toString)
+                           .reduce("", String::concat);
+        System.out.println(result);  // 1234
+    }
+    
+    public static void main(String[] args) {
+        List<Integer> nums = Arrays.asList(1, 2, 3, 4);
+        concatWithReduce(nums);
+    }
+}
+
+#Another approach:-
+String result = nums.stream()
+    .map(String::valueOf)
+    .reduce("", (a, b) -> a + b);
+System.out.println(result);
+
+#Thought Process
+Map phase: Integer → String conversion (1 → "1").
+Reduce phase: String::concat folds left-to-right ("" + "1" → "1", "1" + "2" → "12", etc.).
+Identity "": Empty string neutral for concat. Associative: (a+b)+c = a+(b+c).
+
+#Edge Cases Analysis
+Empty list: Returns "" (identity).
+Single element: Returns its string "5".
+Zero: "0" works.
+Negatives: "-1" includes sign.
+Null list: NPE on stream().
+Null elements: null.toString() NPE—filter first.
