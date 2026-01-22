@@ -1,0 +1,63 @@
+Question: Return all palindrome strings from a list (ignoring case).
+
+Input:
+List<String> vals = Arrays.asList("Level", "world", "civic", "java");
+
+Solutions:-
+
+Java 8 Streams return palindromes (ignoring case) using filter with custom palindrome check. For input ["Level", "world", "civic", "java"], returns ["Level", "civic"].
+
+#Step-by-Step Logic
+Stream → lowercase → filter(isPalindrome) → collect(toList()).
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class PalindromeFilter {
+    
+    private static boolean isPalindrome(String s) {
+        String lower = s.toLowerCase();
+        int left = 0, right = lower.length() - 1;
+        while (left < right) {
+            if (lower.charAt(left++) != lower.charAt(right--)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public static List<String> findPalindromes(List<String> vals) {
+        return vals.stream()
+                   .filter(PalindromeFilter::isPalindrome)
+                   .collect(Collectors.toList());
+    }
+    
+    public static void main(String[] args) {
+        List<String> vals = Arrays.asList("Level", "world", "civic", "java");
+        List<String> palindromes = findPalindromes(vals);
+        System.out.println(palindromes);  // [Level, civic]
+    }
+}
+
+#Another Apporach:-
+vals.stream()
+    .filter(s -> {
+        String lower = s.toLowerCase();
+        return lower.equals(new StringBuilder(lower).reverse().toString());
+    })
+    .forEach(System.out::println);
+
+#Thought Process
+Two-pointer palindrome check: Compare chars from both ends moving inward. Case-insensitive via toLowerCase(). Preserve original casing in output (filter on lowered copy). O(n) per string.
+
+#Edge Cases Analysis
+Empty list: []
+Empty strings: "" is palindrome ✓
+Single chars: "a" is palindrome ✓
+Null list: NPE on stream()
+Null elements: NPE in toLowerCase()
+All palindromes: Returns copy
+No palindromes: []
