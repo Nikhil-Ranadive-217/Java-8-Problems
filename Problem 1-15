@@ -1,0 +1,44 @@
+Question:
+Find the second largest number in a list.
+
+Input:
+List<Integer> nums = Arrays.asList(2, 8, 5, 3, 8);
+
+Solutions:-
+
+Java 8 Streams find second largest using stream().sorted().skip(1).findFirst(). For input [2, 8, 5, 3, 8], returns 5 (largest=8, second=5).
+
+#Step-by-Step Logic
+Stream → sorted descending → skip(1) → findFirst() → Optional.
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+
+public class SecondLargest {
+    public static Optional<Integer> findSecondLargest(List<Integer> nums) {
+        return nums.stream()
+                   .sorted(Comparator.reverseOrder())  // descending
+                   .skip(1)                            // skip largest
+                   .findFirst();                       // get second
+    }
+    
+    public static void main(String[] args) {
+        List<Integer> nums = Arrays.asList(2, 8, 5, 3, 8);
+        findSecondLargest(nums).ifPresent(System.out::println);  // 5
+    }
+}
+
+#Thought Process
+Reverse sort (Comparator.reverseOrder()) puts largest first. skip(1) discards max. findFirst() grabs second largest. Single pass after sort (O(n log n)). Optional handles edge cases safely.
+
+#Edge Cases Analysis
+<2 elements: Empty Optional
+All duplicates: Empty Optional (all same after skip)
+Exactly 2 unique: Returns smaller
+Null list: NPE
+Null elements: NPE in sort—filter first
+Empty: Empty Optional
