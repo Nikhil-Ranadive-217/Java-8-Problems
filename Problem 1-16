@@ -1,0 +1,49 @@
+Question:
+Convert a list of string numbers to integers and double each.
+
+Input:
+List<String> vals = Arrays.asList("2", "4", "8");
+
+Solutions:-
+
+Java 8 Streams convert string numbers to integers then double using mapToInt → map → Boxed. For input ["2", "4", "8"], produces [4, 8, 16].
+
+#Step-by-Step Logic
+Stream strings → mapToInt(Integer::parseInt) → map(double) → boxed() → collect(toList()).
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class StringToDoubledInt {
+    public static List<Integer> convertAndDouble(List<String> vals) {
+        return vals.stream()
+                   .mapToInt(Integer::parseInt)
+                   .map(n -> n * 2)
+                   .boxed()
+                   .collect(Collectors.toList());
+    }
+    
+    public static void main(String[] args) {
+        List<String> vals = Arrays.asList("2", "4", "8");
+        List<Integer> result = convertAndDouble(vals);
+        System.out.println(result);  // [4, 8, 16]
+    }
+}
+
+#Thought Process
+Primitive efficiency: mapToInt(Integer::parseInt) avoids boxing during parse.
+Transform: map(n -> n * 2) doubles on primitive IntStream.
+Back to objects: boxed() converts IntStream → Stream<Integer> for collection.
+Single-pass: O(n) conversion + transformation.
+
+#Edge Cases Analysis
+Empty list: []
+Non-numeric: NumberFormatException (e.g., "abc")
+Null list: NPE on stream()
+Null elements: parseInt(null) NPE
+Zero: "0" → 0 → 0 ✓
+Negatives: "-2" → -2 → -4 ✓
+Overflow: Integer.parseInt range only
