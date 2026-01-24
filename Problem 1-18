@@ -1,0 +1,45 @@
+Question:
+Calculate the sum of only the odd numbers.
+
+Input:
+List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5);
+
+Solutions :- 
+
+Java 8 Streams sum odd numbers using filter(odd) → mapToInt → sum(). For input [1, 2, 3, 4, 5], sums 1+3+5=9.
+
+#Step-by-Step Logic
+Stream → filter(n -> n % 2 != 0) → mapToInt(Integer::intValue) → sum().
+
+#Complete Implementation
+
+import java.util.Arrays;
+import java.util.List;
+
+public class SumOddNumbers {
+    public static int sumOdds(List<Integer> nums) {
+        return nums.stream()
+                   .filter(n -> n % 2 != 0)
+                   .mapToInt(Integer::intValue)
+                   .sum();
+    }
+    
+    public static void main(String[] args) {
+        List<Integer> nums = Arrays.asList(1, 2, 3, 4, 5);
+        System.out.println(sumOdds(nums));  // 9
+    }
+}
+
+#Thought Process
+Predicate: n % 2 != 0 identifies odds (works for negatives too).
+Primitive optimization: mapToInt avoids boxing for summation.
+Terminal: sum() reduces IntStream to int. Single-pass O(n).
+
+#Edge Cases Analysis
+Empty list: Returns 0 (sum identity)
+No odds: Returns 0
+All odds: Sums all elements
+Zero: Even (0 % 2 == 0), filtered out
+Negatives: -3 % 2 == -1 != 0, correctly odd
+Null list: NPE on stream()
+Null elements: NPE in intValue()
