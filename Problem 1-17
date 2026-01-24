@@ -1,0 +1,49 @@
+Question:
+Partition strings by whether they contain the letter 'a'.
+
+Input:
+List<String> vals = Arrays.asList("table", "chair", "desk", "sofa");
+
+Solutions:-
+
+Java 8 Streams partition strings by 'a' presence using Collectors.partitioningBy(s -> s.contains("a")). For input ["table", "chair", "desk", "sofa"], true=["table"], false=["chair", "desk", "sofa"].
+
+#Step-by-Step Logic
+Stream strings → collect(partitioningBy(contains "a")) → Map<Boolean, List<String>>.
+
+#Complete Implementation
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class PartitionByA {
+    public static Map<Boolean, List<String>> partitionByA(List<String> vals) {
+        return vals.stream()
+                   .collect(Collectors.partitioningBy(s -> s.contains("a")));
+    }
+    
+    public static void main(String[] args) {
+        List<String> vals = Arrays.asList("table", "chair", "desk", "sofa");
+        Map<Boolean, List<String>> partitioned = partitionByA(vals);
+        
+        System.out.println("Contains 'a': " + partitioned.get(true));
+        System.out.println("No 'a': " + partitioned.get(false));
+    }
+}
+
+Output:
+
+text
+Contains 'a': [table]
+No 'a': [chair, desk, sofa]
+
+#Thought Process
+partitioningBy creates boolean-keyed Map (true/false). String.contains("a") case-sensitive predicate. Single-pass O(n). Access results via get(true)/get(false). Preserves encounter order within partitions.
+
+#Edge Cases Analysis
+Empty list: {true=[], false=[]}
+All contain 'a': {true=[all], false=[]}
+No 'a': {true=[], false=[all]}
+Empty strings: "".contains("a") = false
+Null list: NPE on stream()
+Null elements: null.contains("a") NPE
