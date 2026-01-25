@@ -1,0 +1,78 @@
+Question:
+Group employees by department, then count employees in each.
+
+Input:
+List of Employee objects, each with getDepartment().
+
+Solutions:-
+
+Java 8 Streams group employees by department then count using nested collectors: groupingBy(dept, counting()). Creates Map<String, Long> with department→count.
+
+#Step-by-Step Logic
+Stream employees → groupingBy(Employee::getDepartment, counting()).
+
+#Complete Implementation
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+class Employee {
+    private String name;
+    private String department;
+    
+    public Employee(String name, String department) {
+        this.name = name;
+        this.department = department;
+    }
+    
+    public String getName() { return name; }
+    public String getDepartment() { return department; }
+    
+    @Override
+    public String toString() {
+        return name + "(" + department + ")";
+    }
+}
+
+public class GroupByDepartmentCount {
+    public static Map<String, Long> countByDepartment(List<Employee> employees) {
+        return employees.stream()
+                       .collect(Collectors.groupingBy(
+                           Employee::getDepartment(),
+                           Collectors.counting()
+                       ));
+    }
+    
+    public static void main(String[] args) {
+        List<Employee> employees = Arrays.asList(
+            new Employee("Alice", "Engineering"),
+            new Employee("Bob", "HR"),
+            new Employee("Charlie", "Engineering"),
+            new Employee("Diana", "Engineering"),
+            new Employee("Eve", "HR")
+        );
+        
+        Map<String, Long> deptCount = countByDepartment(employees);
+        deptCount.forEach((dept, count) -> 
+            System.out.println(dept + ": " + count));
+    }
+}
+
+Output:
+text
+Engineering: 3
+HR: 2
+
+#Thought Process
+Outer collector: groupingBy(dept) creates Map<String, List<Employee>>.
+Inner collector: counting() converts each list to size Long.
+Method reference: Employee::getDepartment clean extractor.
+Single-pass O(n): One traversal builds complete map.
+
+#Edge Cases Analysis
+Empty list: Empty Map
+Single employee: {dept=1L}
+All same dept: {dept=n}
+Null list: NPE on stream()
+Null dept: null key with count
+Null employees: NPE in getDepartment()
