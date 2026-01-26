@@ -1,0 +1,66 @@
+Question:
+Find both minimum and maximum values; return empty optional if the list is empty.
+
+Input:
+List<Integer> nums = Arrays.asList(4, 6, 2, 9);
+
+Solutions:-
+
+Java 8 Streams find min/max simultaneously using min() and max() on same stream (lazy evaluation). Returns pair or empty if list empty.
+
+#Step-by-Step Logic
+Stream → call min() and max() → collect OptionalInts → handle empty case.
+
+#Complete Implementation
+
+import java.util.*;
+import java.util.OptionalInt;
+
+public class MinMaxPair {
+    
+    public static class MinMax {
+        public final OptionalInt min;
+        public final OptionalInt max;
+        
+        MinMax(OptionalInt min, OptionalInt max) {
+            this.min = min;
+            this.max = max;
+        }
+    }
+    
+    public static MinMax findMinMax(List<Integer> nums) {
+        OptionalInt min = nums.stream().mapToInt(Integer::intValue).min();
+        OptionalInt max = nums.stream().mapToInt(Integer::intValue).max();
+        return new MinMax(min, max);
+    }
+    
+    public static void main(String[] args) {
+        List<Integer> nums = Arrays.asList(4, 6, 2, 9);
+        MinMax result = findMinMax(nums);
+        
+        if (result.min.isPresent() && result.max.isPresent()) {
+            System.out.printf("Min: %d, Max: %d%n", 
+                result.min.getAsInt(), result.max.getAsInt());
+        } else {
+            System.out.println("List is empty");
+        }
+    }
+}
+
+Output:
+
+text
+Min: 2, Max: 9
+
+#Thought Process
+Lazy streams: Both min()/max() share pipeline until terminal (none here = lazy).
+Primitive streams: mapToInt efficient, OptionalInt for results.
+Single responsibility: Wrapper class pairs results cleanly.
+Empty handling: Optional.isPresent() safe check.
+
+#Edge Cases Analysis
+Empty list: Both OptionalInt.empty() → "List is empty"
+Single element: min=max=that element
+All duplicates: min=max=same value
+Null list: NPE on stream()
+Null elements: NPE in intValue()
