@@ -1,0 +1,49 @@
+Question:
+Flatten a list of integer lists into a unique set.
+
+Input:
+List<List<Integer>> listOfLists = Arrays.asList(Arrays.asList(1,2), Arrays.asList(2,3,4));
+
+Solutions:-
+
+Java 8 Streams flatten nested integer lists into unique set using flatMap + collect(toSet()). For input [[1,2], [2,3,4]], produces {1,2,3,4}.
+
+#Step-by-Step Logic
+Stream outer list → flatMap(inner -> inner.stream()) → collect(Collectors.toSet()).
+
+#Complete Implementation
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class FlattenToUniqueSet {
+    public static Set<Integer> flattenToUniqueSet(List<List<Integer>> listOfLists) {
+        return listOfLists.stream()
+                         .flatMap(List::stream)           // flatten nested lists
+                         .collect(Collectors.toSet());    // unique HashSet
+    }
+    
+    public static void main(String[] args) {
+        List<List<Integer>> listOfLists = Arrays.asList(
+            Arrays.asList(1, 2),
+            Arrays.asList(2, 3, 4)
+        );
+        
+        Set<Integer> result = flattenToUniqueSet(listOfLists);
+        System.out.println(result);  // [1, 2, 3, 4]
+    }
+}
+
+#Thought Process
+flatMap(List::stream): Converts each List<Integer> → Stream<Integer>, flattening nested structure.
+collect(toSet()): Automatic deduplication via HashSet (equals/hashCode).
+Order: Unordered (HashSet). Use LinkedHashSet for insertion order.
+Single-pass O(n): One traversal flattens + deduplicates.
+
+#Edge Cases Analysis
+Empty outer: Empty Set
+Empty inner lists: Skipped (empty streams)
+All duplicates: Single element set
+Null outer: NPE on stream()
+Null inner list: null.stream() NPE
+Null elements: HashSet handles null once
